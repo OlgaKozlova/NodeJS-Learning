@@ -124,6 +124,21 @@ function IPCTest() {
     });
 }
 
+function processIOTests() {
+    process.stdin.setEncoding('utf8');
+    console.log(process.stdin.isTTY); // чтобы увидеть true надо запускать из консоли а не из дебаггера
+
+    process.stdin.on('readable', () => {
+        let chunk = process.stdin.read();
+        if (chunk === null) {
+            chunk = 'null read\n';
+        }
+        process.stdout.write(`data: ${chunk}`);
+        process.stderr.write(`error: ${chunk}`);
+    });
+}
+
+
 
 // printProcessInternals();
 // printNodeJSInfo();
@@ -137,4 +152,5 @@ function IPCTest() {
 // testExit1();
 // testExit2();
 // testExit3();
-IPCTest();
+// IPCTest();
+processIOTests();
