@@ -22,8 +22,16 @@ function moduleTest() {
 }
 
 function requireTest() {
-   // console.log(require);
-    console.log(module.__proto__);
+    console.log(require.resolve('./module.js')); // D:\Projects\NodeJS-Learning\3_Modules\module.js
+    console.log(require.resolve('fs')); // fs
+    console.log(require.resolve('fs-extra')); // D:\Projects\NodeJS-Learning\node_modules\fs-extra\lib\index.js
+    let module = require('./module.js');
+    console.log(module); // { sayHello: [Function: sayHello] }
+    console.log(require.main.filename); // D:\Projects\NodeJS-Learning\3_Modules\tests.js
+    console.log(Object.keys(require.extensions)); // [ '.js', '.json', '.node' ]
+    console.log(Object.keys(require.cache)); // [ 'D:\\Projects\\NodeJS-Learning\\3_Modules\\tests.js',
+                                             // 'D:\\Projects\\NodeJS-Learning\\3_Modules\\module.js' ]
+
 }
 
 // globalModuleFileNameDirNameTest();
