@@ -23,6 +23,7 @@ function printEnvironmentInfo() {
 }
 
 function printProcessInfo() {
+    console.log(process.title);    // C:\Program Files\JetBrains\WebStorm 2017.2.3\bin\runnerw.exe
     console.log(process.pid);      // 7548
     console.log(process.execArgv); // [ '--harmony' ]
     console.log(process.argv);     // [ 'C:\\Program Files\\nodejs\\node.exe',
@@ -138,7 +139,52 @@ function processIOTests() {
     });
 }
 
+function processNextTickTests() {
+    function mySetImmediate() {
+       // fs.writeFile('t.txt', '', () => {
+            setImmediate(() => {
+                console.log('1_IMMEDIATE');
+                setImmediate(() => {
+                    console.log('1_1_IMMEDIATE');
+                })
+            });
 
+            setTimeout(() => {
+                console.log('1_TIMEOUT FIRED');
+            }, 0)
+        //});
+    }
+    
+    function nextTick() {
+        fs.writeFile('t.txt', '', () => {
+            process.nextTick(() => {
+                console.log('2_NEXT_TICK');
+                process.nextTick(() => {
+                    console.log('2_2_NEXT_TICK');
+                });
+            });
+
+            setTimeout(() => {
+                console.log('2_TIMEOUT FIRED');
+            }, 0)
+        });
+    }
+
+    mySetImmediate();
+    //nextTick();
+}
+
+function processUMaskTest() {
+    const newmask = 0o001;
+    const oldmask = process.umask(newmask);
+    console.log(
+        `Old: ${oldmask.toString(8)}, new: ${newmask.toString(8)}` // Old: 0, new: 1
+    );
+}
+
+function mainModuleTest() {
+    console.log(process.mainModule);
+}
 
 // printProcessInternals();
 // printNodeJSInfo();
@@ -146,11 +192,14 @@ function processIOTests() {
 // printProcessInfo();
 // printProfilingInfo();
 // testChangeDir();
-// testProcessEvents();
 // testKill();
 // testAbort();
 // testExit1();
 // testExit2();
 // testExit3();
 // IPCTest();
-processIOTests();
+// processIOTests();
+// processNextTickTests();
+// processUMaskTest();
+ mainModuleTest();
+// testProcessEvents();
